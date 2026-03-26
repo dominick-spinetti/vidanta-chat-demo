@@ -406,10 +406,19 @@
     cxone("chat", "setContactCustomField", "phone", "4801231234");
     cxone("chat", "setContactCustomField", "new_lang", "en-US");
 
-    // Guide sizing
-    cxone("guide", "setDesiredGuideWidth", "400px");
-    cxone("guide", "setDesiredGuideHeight", "600px");
-    cxone("guide", "setButtonSize", "70px");
+    // Mobile detection
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                     || window.innerWidth <= 768;
+
+    if (isMobile) {
+      // Mobile: full-screen mode
+      cxone("guide", "setFullDisplay");
+    } else {
+      // Desktop: widget mode
+      cxone("guide", "setDesiredGuideWidth", "400px");
+      cxone("guide", "setDesiredGuideHeight", "600px");
+      cxone("guide", "setButtonSize", "70px");
+    }
 
     // Custom chat header — Vidanta logo, dark header
     setTimeout(() => {
@@ -427,6 +436,15 @@
           color: #C29C75 !important;
         }
       `);
+
+      // Mobile: hide the minimize button in full-screen mode
+      if (isMobile) {
+        cxone("guide", "setCustomCss", `
+          [data-selector="GUIDE_SINGLE_MENU_CLOSE_BUTTON"] {
+            display: none !important;
+          }
+        `);
+      }
     }, 1000);
 
     // Accessibility – focus outline
